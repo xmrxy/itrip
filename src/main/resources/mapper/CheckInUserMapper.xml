@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wu.dao.CheckInUserMapper">
+    <insert id="addCheckInUser" parameterType="checkInUser">
+        INSERT INTO `checkinuser` (userId,trueName,idNum,phoneNum,orderId)
+        VALUES(#{userId},#{trueName},#{idNum},#{phoneNum},#{orderId})
+    </insert>
+
+    <select id="getCheckInUserByOrderId" resultType="checkInUser">
+        select * from checkInUser where orderId=#{orderId}
+    </select>
+</mapper>

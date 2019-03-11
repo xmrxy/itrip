@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wu.dao.UserMapper">
+   <select id="getOneUserByMail" resultType="user">
+     SELECT * FROM USER WHERE mail=#{mail} AND PASSWORD=#{password}
+   </select>
+   <select id="getOneUserByPhone" resultType="user">
+     SELECT * FROM USER WHERE phoneNum=#{phoneNum} AND PASSWORD=#{password}
+   </select>
+
+    <insert id="addUser" parameterType="user">
+        INSERT INTO USER (userName,realName,PASSWORD,phoneNum,mail,head)
+        VALUES (#{userName},#{realName},#{password},#{phoneNum},#{mail},#{head})
+    </insert>
+    <select id="existMail" resultType="int">
+        SELECT COUNT(1) FROM `user` WHERE mail=#{mail}
+    </select>
+    <select id="existPhone" resultType="int">
+         SELECT COUNT(1) FROM `user` WHERE phoneNum=#{phone}
+    </select>
+    <update id="updateUserInfo">
+        UPDATE USER
+        <trim prefix="set" suffixOverrides=",">
+            <if test="userName!=null and userName!=''">
+                userName=#{userName},
+            </if>
+            <if test="password!=null and password!=''">
+                password=#{password},
+            </if>
+            <if test="phoneNum!=null and phoneNum!=''">
+                phoneNum=#{phoneNum},
+            </if>
+            <if test="mail!=null and mail!=''">
+                mail=#{mail},
+            </if>
+        </trim>
+        WHERE id=#{id}
+    </update>
+    <select id="getUserById" resultType="user">
+        select * from user where id=#{id}
+    </select>
+</mapper>

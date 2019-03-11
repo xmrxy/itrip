@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wu.dao.OrderMapper">
+    <insert id="addOrder" parameterType="order">
+        INSERT INTO `order`(checkIn,checkOut,hotelName,houseCount,price,contactName,phone,mail,userId,houseName,houseId,orderTime,status,orderNum)
+        VALUES(#{checkIn},#{checkOut},#{hotelName},#{houseCount},#{price},#{contactName},#{phone},#{mail},#{userId},#{houseName},#{houseId},#{orderTime},#{status},#{orderNum})
+    </insert>
+    <select id="getOrderMaxId" resultType="int">
+        SELECT MAX(id) FROM `order`
+    </select>
+    <select id="getHouseCount" resultType="Integer">
+        SELECT SUM(houseCount) FROM `order` WHERE houseId=#{houseId}
+            and checkOut>#{checkIn} and `status`=1
+    </select>
+    <select id="getOrder" parameterType="order" resultType="order">
+        SELECT * FROM `order`
+        <trim prefix="where" prefixOverrides="and">
+            <if test="orderTime!=null and orderTime!=''">
+                and orderTime>#{orderTime}
+            </if>
+            <if test="hotelName!=null and hotelName!=''">
+                and hotelName LIKE CONCAT('%',#{hotelName},'%')
+            </if>
+            <if test="contactName!=null and contactName!=''">
+                and contactName LIKE CONCAT('%',#{contactName},'%')
+            </if>
+            <if test="status!=null and status!='' ">
+                and status=#{status}
+            </if>
+            and userId=#{userId}
+        </trim>
+         order by  orderTime desc limit #{starRow},#{pageSize}
+    </select>
+    <select id="getOrderCount" parameterType="order" resultType="int">
+        SELECT count(1) FROM `order`
+        <trim prefix="where" prefixOverrides="and">
+            <if test="hotelName!=null and hotelName!=''">
+                and hotelName LIKE CONCAT('%',#{hotelName},'%')
+            </if>
+            <if test="contactName!=null and contactName!=''">
+                and contactName LIKE CONCAT('%',#{contactName},'%')
+            </if>
+            <if test="status!=null and status!='' ">
+                and status=#{status}
+            </if>
+             and userId=#{userId}
+        </trim>
+    </select>
+    <update id="updateOrderStatus">
+          UPDATE `order` SET `status`=#{status} WHERE id=#{orderId}
+    </update>
+
+    <update id="updateOrderStatusByTime">
+        UPDATE `order` SET `status`=#{status} WHERE checkOut=#{time}
+    </update>
+
+    <update id="updateOrderStatusByPay">
+         UPDATE `order` SET `status`=#{status} WHERE orderNum=#{orderNum}
+    </update>
+    <select id="getOrderById" resultType="order">
+        select * from `order` where id=#{orderId}
+    </select>
+    <select id="getOrderStatusByOrderNum" resultType="int">
+        select `status` from `order` where orderNum=#{orderNum}
+    </select>
+</mapper>

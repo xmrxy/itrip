@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wu.dao.HouseMapper">
+    <select id="getHouse" resultType="house">
+        SELECT h.*,b.bed FROM house h,bedType b where h.bedTypeId=b.id and
+        <trim prefixOverrides="and">
+            <if test="hotelId!=null and hotelId!=''">
+                and h.hotelId=#{hotelId}
+            </if>
+            <if test="bedTypeId!=null and bedTypeId!=''">
+                and h.bedTypeId=#{bedTypeId}
+            </if>
+            <if test="breakfast!=null and breakfast!=''">
+                and h.breakfast=#{breakfast}
+            </if>
+            <if test="broadband!=null and broadband!=''">
+                and h.broadband=#{broadband}
+            </if>
+            <if test="policy!=null and policy!=''">
+                and h.policy=#{policy}
+            </if>
+            <if test="count!=null and count!=''">
+                and h.count>#{count}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getHousePrice" resultType="string">
+        SELECT housePrice FROM house WHERE id=#{houseId};
+    </select>
+    <select id="getHouseName" resultType="string">
+        select houseName from house where id=#{houseId}
+    </select>
+    <select id="getHouseCount" resultType="int">
+        SELECT `count` FROM house WHERE id=#{houseId}
+    </select>
+
+</mapper>
